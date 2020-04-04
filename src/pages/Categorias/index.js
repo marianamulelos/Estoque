@@ -4,27 +4,27 @@ import logo from '../../assets/logo.png';
 import { FiMenu  } from 'react-icons/fi';
 import './style.css';
 import MUIDataTable from "mui-datatables";
+import { ptBr } from '../../shared/MUIDataTableLabels';
 
 export default function Categorias(){
     const columns = ["ID", "CATEGORIAS"];
-
     const [categorias, setCategorias] = useState([]);
+    const options = {
+        textLabels: ptBr
+    }
 
     useEffect(() => {
         api.get('categorias').then(response => {
-            setCategorias(response.data);
+            let categories = [];
+            response.data.forEach(element => {
+                categories.push([element.id_categoria, element.categoria]);
+            });
+            setCategorias(categories);
         })
     }, []);
 
-    console.log(categorias);
-
     return(
       <div className="categorias-container">
-           <MUIDataTable 
-            title={"LISTA DE CATEGORIAS"}
-            data={categorias}
-            columns={columns} 
-            />  
 
             <header>
                 <img src={logo} alt={logo} />
@@ -36,6 +36,13 @@ export default function Categorias(){
 
                 <h1> MENU </h1>
             </header>
+
+            <MUIDataTable 
+                title={"LISTA DE CATEGORIAS"}
+                data={categorias}
+                columns={columns} 
+                options={options}
+            />  
             
       </div>
       
